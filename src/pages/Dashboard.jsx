@@ -1,4 +1,8 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
+
 import React, { useState, useEffect, useContext } from "react";
+
 import axios from "axios"; //no need to use .json
 import { LinkContainer } from "react-router-bootstrap";
 import {
@@ -10,6 +14,7 @@ import {
 } from "react-bootstrap";
 import DestinationCards from "../components/DashboardComponents/DestinationCards";
 
+import PlannerCards from "../components/DashboardComponents/PlannerCards";
 import cityData from "../data/destinations";
 
 
@@ -18,6 +23,8 @@ export default function Dashboard() {
 
   const [destinationsData, setDestinationsData] = useState([]);
   const [destinationsLoaded, setDestinations]=useState([])
+  const [plannerData,setMyPlanner]=useState([])
+  const [plannerLoaded,setPlannerLoaded]=useState([])
 
 
   function fetchDestinationsData() {
@@ -32,7 +39,7 @@ export default function Dashboard() {
 
   function fetchPlannerData() {
     axios({
-      url: `/api/planner`,
+      url: `http://localhost:3003/api/planner`,
       method: "get",
       
     }).catch((err)=>{
@@ -42,51 +49,87 @@ export default function Dashboard() {
 
 
   useEffect(() => {
-    //fetchPlannerData();
+    fetchPlannerData();
     fetchDestinationsData();
   }, []);
 
   return (
+  <>
     <Container
       fluid={true}
       className="flex-fill d-flex flex-column justify-content-start align-items-start gap-2 p-5 position-relative"
     >
       <h2>Dashboard</h2>
 
-      <Container
-        fluid={true}
-        className="d-flex flex-column justify-content-center align-items-start p-0 gap-3 my-2"
-      >
-        <h5>Destinations</h5>
         <Container
           fluid={true}
-          className="d-flex flex-row justify-content-start align-items-center gap-3 p-2"
-          style={{ overflowX: "auto" }}
+          className="d-flex flex-column justify-content-center align-items-start p-0 gap-3 my-2"
         >
-          {destinationsLoaded ? (
-            destinationsData.map((city) => {
-              return (
-                <DestinationCards
-                  data={city}
-                  key={city.data.id}
-                  className="mb-3"
-                />
-              );
-            })
-          ) : (
-            <h5>Loading...</h5>
-          )}
+          <h5>Destinations</h5>
+            <Container
+              fluid={true}
+              className="d-flex flex-row justify-content-start align-items-center gap-3 p-2"
+              style={{ overflowX: "auto" }}
+            >
+              {destinationsLoaded ? (
+                destinationsData.map((city) => {
+                  return (
+                    <DestinationCards
+                      data={city}
+                      key={city.data.id}
+                      className="mb-3"
+                    />
+                  );
+                })
+              ) : (
+                <h5>Loading...</h5>
+              )}
+            </Container>
         </Container>
-      </Container>
 
       <Container
         fluid={true}
         className="d-flex flex-column justify-content-center align-items-start p-0 gap-3 my-2"
       >
         <h5>Planner</h5>
-        
+        <Container
+          fluid={true}
+          className="d-flex flex-row justify-content-start align-items-center gap-3 p-2"
+          style={{ overflowX: "auto" }}
+        >
+          {plannerLoaded ? (
+            plannerData.length > 0 ? (
+              plannerData.map((planner) => {
+                return (
+                  <PlannerCards
+                    data={planner}
+                    key={planner.uuid}
+                    state={setPlannerLoaded}
+                  />
+                );
+              })
+            ) : (
+              <></>
+            )
+          ) : (
+            <h5>Loading</h5>
+          )}
+          <Card className="flex-shrink-0 25 text-start p-4">
+            <Card.Body>
+              <LinkContainer to="/planner/create">
+                <Button variant="primary" size="lg">
+                
+                  <FontAwesomeIcon icon={solid("circle-plus")} /> &nbsp; Create
+                </Button>
+              </LinkContainer>
+            </Card.Body>
+          </Card>
+        </Container>
       </Container>
-     
+        
     </Container>
+     
+    
+  </>
   );
 }

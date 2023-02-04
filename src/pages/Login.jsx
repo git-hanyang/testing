@@ -44,8 +44,9 @@ const Login = () => {
 
     console.log(userData)
     axios.post("http://localhost:3003/api/session/verify",user)
-      .then((res) => {
-        console.log(res.data)
+      .then(
+        (res) => {
+        //console.log(res.data)
         //setCurrentUser(res.data);
       })
       .then(()=>{

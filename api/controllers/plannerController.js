@@ -6,7 +6,7 @@ const Planner = require("../models/plannerSchema");
 
 router.get("/", (req, res) => {
   Planner.find({}, (err, myPlanner) => {
-    console.log(req.session.currentUser.username)
+    //console.log(req.session.currentUser.username)
     
     if (err) {
       res.status(400).send({ err: err.message });

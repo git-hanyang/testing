@@ -1,17 +1,32 @@
 require("dotenv").config();
-const Planner = require("./models/plannerSchema");
+
 const express = require("express");
 const session = require("express-session");
 const app = express();
 const cookieParser=require('cookie-parser')
+const redis = require('connect-redis');
+
+// const { createProxyMiddleware } = require("http-proxy-middleware");
+// app.use('/api', createProxyMiddleware('**',{ target: 'http://localhost:3003', changeOrigin: true }))
+
 
 
 const cors = require("cors");
+
+app.use(cors())
 const whitelist = ["http://localhost:3000",'http://127.0.0.1:3000'];
 
 const corsOption = {
   origin: whitelist,
 };
+
+const redisClient = require('redis').createClient({
+  legacyMode:true
+});
+
+redisClient.connect().catch(console.log)
+const redisStore=redis(session)
+
 app.use(cors(corsOption));
 app.use(cookieParser())
 
@@ -57,9 +72,10 @@ app.use(function (req, res, next) {
 const oneDay=1000*60*60*24
 app.use(
   session({
+    store:new RedisStore({client:redisClient}),
     secret: "someramdomstringvalue",
     resave: true,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie:{maxAge: oneDay}
   })
 );
