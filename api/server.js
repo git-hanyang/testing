@@ -1,34 +1,48 @@
 require("dotenv").config();
+const User = require("./models/userSchema.js");
 
 const express = require("express");
 const session = require("express-session");
 const app = express();
-const cookieParser=require('cookie-parser')
-const redis = require('connect-redis');
+const cookieParser=require("cookie-parser")
+const redis = require("connect-redis");
+const jwt=require("jsonwebtoken")
 
 // const { createProxyMiddleware } = require("http-proxy-middleware");
 // app.use('/api', createProxyMiddleware('**',{ target: 'http://localhost:3003', changeOrigin: true }))
 
 
-
 const cors = require("cors");
 
-app.use(cors())
-const whitelist = ["http://localhost:3000",'http://127.0.0.1:3000'];
+
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, authorization");
+//   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+//   next();
+// });
+
+const whitelist = ["http://localhost:3000"];
 
 const corsOption = {
   origin: whitelist,
+  optionsSuccessStatus: 200,
+  credentials: true,
 };
+
+app.use(cors(corsOption))
 
 const redisClient = require('redis').createClient({
   legacyMode:true
 });
 
-redisClient.connect().catch(console.log)
-const redisStore=redis(session)
+// redisClient.connect().catch(console.log)
+// const RedisStore=redis(session)
 
-app.use(cors(corsOption));
+
 app.use(cookieParser())
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 
 
@@ -59,42 +73,39 @@ mongoose.connection.on("disconnected", () => {
   console.log("disconnected from mongodb");
 });
 
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, authorization");
-  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-  next();
-});
+
 
 
 ///////////////////////////////////////////////////////////////////////
 //**************************SignUp & SignIn *****************************//
 const oneDay=1000*60*60*24
+
+
 app.use(
   session({
-    store:new RedisStore({client:redisClient}),
+    //store:new RedisStore({client:redisClient}),
     secret: "someramdomstringvalue",
-    resave: true,
+    resave: false,
     saveUninitialized: false,
-    cookie:{maxAge: oneDay}
+    cookie:{maxAge: oneDay},
   })
 );
 
+
+
 const userController = require("./controllers/users.js");
-const sessionController = require("./controllers/sessions.js");
 const plannerController = require("./controllers/plannerController.js");
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
-app.use("/api/user", userController);
-app.use("/api/session", sessionController);
+
+app.use("/user", userController);
+
+
 app.use("/api/planner", plannerController);
 
 
 
 
-//https://www.section.io/engineering-education/session-management-in-nodejs-using-expressjs-and-express-session/
 
 
 // app.get("/app", (req, res) => {
