@@ -1,9 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Container, Nav, Navbar } from "react-bootstrap";
+import Cookies from 'js-cookie'
+import Login from "../pages/Login";
 
 export default function Header() {
   const [expanded, setExpanded] = useState(false);
+  const [isLoggedIn,setLoggedIn]=useState(false)
+
+  useEffect(()=>{
+    if(Cookies.get('access_token')){
+      setLoggedIn(true)
+    }
+  })
+
   return (
     <Navbar bg="dark" variant="dark" expand="lg" expanded={expanded}>
       <Container>
@@ -33,13 +43,24 @@ export default function Header() {
               <Nav.Link>Planner</Nav.Link>
             </LinkContainer>
 
-            <LinkContainer to="/login" onClick={() => setExpanded(false)}>
-              <Nav.Link>Login</Nav.Link>
-            </LinkContainer>
+
 
             <LinkContainer to="/signup" onClick={() => setExpanded(false)}>
               <Nav.Link>SignUp</Nav.Link>
             </LinkContainer>
+
+            {isLoggedIn?
+              <LinkContainer to="/signup" onClick={() => setExpanded(false)}>
+              <Nav.Link>SignOut</Nav.Link>
+            </LinkContainer>
+            : <LinkContainer to="/login" onClick={() => setExpanded(false)}>
+              <Nav.Link>Login</Nav.Link>
+            </LinkContainer>}
+
+            <LinkContainer to="/signup" onClick={() => setExpanded(false)}>
+              <Nav.Link>Logout</Nav.Link>
+            </LinkContainer>
+
           </Nav>
         </Navbar.Collapse>
       </Container>

@@ -33,9 +33,9 @@ const Register =() =>{
     console.log(userData)
      e.preventDefault();
       axios({
-        url: "/api/user",
+        url: "http://localhost:3003/user/add",
         method: "post",
-        data: { username: userData.username, password: userData.password },
+        data: { username: userData.username, password: userData.password }
       })
       .then(()=>{
         navigate('/login')

@@ -9,6 +9,7 @@ import {
   Container,
   Card,
   Button,
+  Form,
   Toast,
   ToastContainer,
 } from "react-bootstrap";
@@ -23,9 +24,16 @@ export default function Dashboard() {
 
   const [destinationsData, setDestinationsData] = useState([]);
   const [destinationsLoaded, setDestinations]=useState([])
-  const [plannerData,setMyPlanner]=useState([])
-  const [plannerLoaded,setPlannerLoaded]=useState([])
-
+  const [myPlannerData,setMyPlannerData]=useState()
+  const [plannerLoaded,setPlannerLoaded]=useState(false)
+  
+  function logOut(){
+    axios({
+      url: `http://localhost:3003/api/planner`,
+      method: "get",
+      
+    })
+  }
 
   function fetchDestinationsData() {
     const dataArray = [];
@@ -42,7 +50,14 @@ export default function Dashboard() {
       url: `http://localhost:3003/api/planner`,
       method: "get",
       
-    }).catch((err)=>{
+    })
+    .then((res)=>{
+      console.log(res.data)
+      setMyPlannerData(res.data)
+      console.log(myPlannerData)
+      setPlannerLoaded(true)
+    })
+    .catch((err)=>{
       console.log(err.response.status)
     })
   }
@@ -50,7 +65,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchPlannerData();
-    fetchDestinationsData();
+    //fetchDestinationsData();
   }, []);
 
   return (
@@ -66,7 +81,8 @@ export default function Dashboard() {
           className="d-flex flex-column justify-content-center align-items-start p-0 gap-3 my-2"
         >
           <h5>Destinations</h5>
-            <Container
+          
+            {/* <Container
               fluid={true}
               className="d-flex flex-row justify-content-start align-items-center gap-3 p-2"
               style={{ overflowX: "auto" }}
@@ -84,7 +100,7 @@ export default function Dashboard() {
               ) : (
                 <h5>Loading...</h5>
               )}
-            </Container>
+            </Container> */}
         </Container>
 
       <Container
@@ -98,22 +114,20 @@ export default function Dashboard() {
           style={{ overflowX: "auto" }}
         >
           {plannerLoaded ? (
-            plannerData.length > 0 ? (
-              plannerData.map((planner) => {
+            
+              myPlannerData.map((planner,idx) => {
                 return (
                   <PlannerCards
                     data={planner}
-                    key={planner.uuid}
-                    state={setPlannerLoaded}
+                    key={idx}
+                    // state={setPlannerLoaded}
                   />
                 );
               })
             ) : (
-              <></>
-            )
-          ) : (
             <h5>Loading</h5>
           )}
+
           <Card className="flex-shrink-0 25 text-start p-4">
             <Card.Body>
               <LinkContainer to="/planner/create">
@@ -124,9 +138,16 @@ export default function Dashboard() {
               </LinkContainer>
             </Card.Body>
           </Card>
+
+          
+
         </Container>
       </Container>
-        
+
+      <Form onSubmit={logOut}>
+        <button>Logout</button>
+      </Form>
+      
     </Container>
      
     

@@ -18,6 +18,7 @@ import $ from "jquery";
 
 const Login = () => {
   const [currentUser, setCurrentUser] = useState();
+ 
   const [plannerIDsData, setPlannerIDsData] = useState();
   const navigate = useNavigate();
 
@@ -39,14 +40,20 @@ const Login = () => {
 
     const user={
         username:userData.username,
-        password:userData.password
+        password:userData.password,
     }
 
-    console.log(userData)
-    axios.post("http://localhost:3003/api/session/verify",user)
+    //console.log(userData)
+    
+    axios({  
+      url:"http://localhost:3003/user/verify",
+      method:"post",
+      data:user,
+      withCredentials:true,
+    })
       .then(
         (res) => {
-        //console.log(res.data)
+        console.log(res.data)
         //setCurrentUser(res.data);
       })
       .then(()=>{
@@ -77,9 +84,11 @@ const Login = () => {
     //     }, 3000);
     //  })
       .catch((err) => {
-        const status = err.response.status;
-        console.log(err)
-        console.log(status);
+        //const status = err.response.status;
+        console.log(err.response)
+        console.log(err.request)
+        console.log(err.message)
+        //console.log(status);
       });
   }
 
