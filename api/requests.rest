@@ -1,0 +1,15 @@
+GET http://localhost:3003/api/planner
+
+Authorization:Bearer 
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoid3EiLCJpYXQiOjE2NzU3OTMzNjMsImV4cCI6MTY3Njk5MzM2M30.77WICeJfpUBnMs-oBZhn9gdCd6DrL0B5rCcBDItBbyM
+
+###
+
+POST http://localhost:3003/user/verify
+Content-Type: application/json
+
+{
+    "username":"wq",
+    "password":"wq"
+}
+

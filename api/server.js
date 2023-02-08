@@ -22,6 +22,8 @@ const cors = require("cors");
 //   next();
 // });
 
+app.use(cookieParser())
+
 const whitelist = ["http://localhost:3000"];
 
 const corsOption = {
@@ -40,14 +42,14 @@ const redisClient = require('redis').createClient({
 // const RedisStore=redis(session)
 
 
-app.use(cookieParser())
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 
 
 const portnum = 3003;
-app.listen(portnum, () => {
+app.listen(portnum,'localhost', () => {
   console.log("travel app is listening to port " + portnum);
 });
 
@@ -99,8 +101,6 @@ const plannerController = require("./controllers/plannerController.js");
 
 
 app.use("/user", userController);
-
-
 app.use("/api/planner", plannerController);
 
 

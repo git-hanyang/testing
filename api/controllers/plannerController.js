@@ -1,10 +1,24 @@
 const express = require("express");
 const router = express.Router();
 const Planner = require("../models/plannerSchema");
+const jwt=require("jsonwebtoken")
+require("dotenv").config()
 
+function authenticateToken (req,res,next){
+  console.log(req.cookies)
+  const authHeader=req.headers['authorization']
+  const token = authHeader && authHeader.split(' ')[1]
+  if(token==null) return res.sendStatus(401)
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
+    if(err)return res.sendStatus(403)
+    req.user= user
+    next()
+  })
+}
 
+//https://www.youtube.com/watch?v=mbsmsi7l3r4&t=1444s
 
-router.get("/", (req, res) => {
+router.get("/", authenticateToken, (req, res) => {
   Planner.find({}, (err, myPlanner) => {
     //console.log(req.session.currentUser.username)
     
