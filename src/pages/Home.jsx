@@ -1,9 +1,12 @@
-import React from "react";
+import React, {useContext} from "react";
 import { Container, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import SlideBackground from "../components/SlideBackground";
+import { LoginStatus } from "../PlannerContext";
 
 export default function Home() {
+  const [isLoggedIn,setLoggedIn]= useContext(LoginStatus)
+
   return (
     <Container className="p-0 d-flex flex-column flex-fill" fluid>
       <SlideBackground />
@@ -22,6 +25,13 @@ export default function Home() {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
+
+          {isLoggedIn ? (
+          
+           (null)
+          ) 
+          :
+          <>
           <div className="d-flex gap-2">
             <LinkContainer to="/register">
               <Button className="px-4" size="lg" variant="primary">
@@ -34,6 +44,8 @@ export default function Home() {
               </Button>
             </LinkContainer>
           </div>
+          </>
+          }
         </div>
       </div>
     </Container>

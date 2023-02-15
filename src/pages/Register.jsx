@@ -65,7 +65,7 @@ const Register =() =>{
                 onChange={handleChange}
                 data-field={"username"}
               />
-              <Form.Control.Feedback
+              {/* <Form.Control.Feedback
                 tooltip={true}
                 className="text-start"
                 type="invalid"
@@ -74,7 +74,7 @@ const Register =() =>{
                 <br />
                 Only alphanumeric characters (a-z, A-Z, 0-9) and underscore (_)
                 allowed
-              </Form.Control.Feedback>
+              </Form.Control.Feedback> */}
             </FloatingLabel>
             <FloatingLabel controlId="password" label="Create Password">
               <Form.Control

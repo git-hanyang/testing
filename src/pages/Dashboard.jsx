@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
-
 import React, { useState, useEffect, useContext } from "react";
-
+import { Link, useNavigate, Redirect } from "react-router-dom";
+import Cookies from "js-cookie";
 import axios from "axios"; //no need to use .json
 import { LinkContainer } from "react-router-bootstrap";
 import {
@@ -17,44 +17,44 @@ import DestinationCards from "../components/DashboardComponents/DestinationCards
 
 import PlannerCards from "../components/DashboardComponents/PlannerCards";
 import cityData from "../data/destinations";
+import { PlannerContext } from "../PlannerContext";
+import { LoginStatus } from "../PlannerContext";
 
 
 
 export default function Dashboard() {
+  const [plannerData,setPlannerData]=useContext(PlannerContext)
+  const [isLoggedIn,setLoggedIn]= useContext(LoginStatus)
 
-  const [destinationsData, setDestinationsData] = useState([]);
-  const [destinationsLoaded, setDestinations]=useState([])
-  const [myPlannerData,setMyPlannerData]=useState()
   const [plannerLoaded,setPlannerLoaded]=useState(false)
+  const [destinationsData, setDestinationsData] = useState([]);
+  const [destinationsLoaded, setDestinationsLoaded]=useState(false)
   
-  function logOut(){
-    axios({
-      url: `http://localhost:3003/api/planner`,
-      method: "get",
-      
-    })
-  }
 
   function fetchDestinationsData() {
     const dataArray = [];
     for (const key in cityData) {
       dataArray.push(cityData[key]);
     }
-
     setDestinationsData(dataArray);
-  
+    setDestinationsLoaded(true)
   }
 
   function fetchPlannerData() {
+    const token = Cookies.get('jwt')
+    // console.log(token)
     axios({
       url: `http://localhost:3003/api/planner`,
       method: "get",
-      
+      headers:{
+        Authorization:`Bearer ${token}`
+      },
+      withCredentials:true
     })
     .then((res)=>{
-      console.log(res.data)
-      setMyPlannerData(res.data)
-      console.log(myPlannerData)
+      // console.log(res.data)
+      setPlannerData(res.data)
+      // console.log(plannerData)
       setPlannerLoaded(true)
     })
     .catch((err)=>{
@@ -62,12 +62,16 @@ export default function Dashboard() {
     })
   }
 
-
   useEffect(() => {
+    //console.log(document.cookie)
     fetchPlannerData();
-    //fetchDestinationsData();
+    fetchDestinationsData();
   }, []);
 
+  useEffect(()=>{
+    fetchPlannerData()
+  },[plannerData])
+  
   return (
   <>
     <Container
@@ -82,17 +86,17 @@ export default function Dashboard() {
         >
           <h5>Destinations</h5>
           
-            {/* <Container
+            <Container
               fluid={true}
               className="d-flex flex-row justify-content-start align-items-center gap-3 p-2"
               style={{ overflowX: "auto" }}
             >
               {destinationsLoaded ? (
-                destinationsData.map((city) => {
+                destinationsData.map((city,idx) => {
                   return (
                     <DestinationCards
                       data={city}
-                      key={city.data.id}
+                      key={idx}
                       className="mb-3"
                     />
                   );
@@ -100,7 +104,7 @@ export default function Dashboard() {
               ) : (
                 <h5>Loading...</h5>
               )}
-            </Container> */}
+            </Container>
         </Container>
 
       <Container
@@ -108,14 +112,14 @@ export default function Dashboard() {
         className="d-flex flex-column justify-content-center align-items-start p-0 gap-3 my-2"
       >
         <h5>Planner</h5>
+        
         <Container
           fluid={true}
           className="d-flex flex-row justify-content-start align-items-center gap-3 p-2"
           style={{ overflowX: "auto" }}
         >
           {plannerLoaded ? (
-            
-              myPlannerData.map((planner,idx) => {
+              plannerData.map((planner,idx) => {
                 return (
                   <PlannerCards
                     data={planner}
@@ -130,23 +134,24 @@ export default function Dashboard() {
 
           <Card className="flex-shrink-0 25 text-start p-4">
             <Card.Body>
+            {isLoggedIn?
               <LinkContainer to="/planner/create">
                 <Button variant="primary" size="lg">
-                
                   <FontAwesomeIcon icon={solid("circle-plus")} /> &nbsp; Create
                 </Button>
               </LinkContainer>
+              :
+              <LinkContainer to="/login">
+                <Button variant="primary" size="lg">
+                  <FontAwesomeIcon icon={solid("circle-plus")} /> &nbsp; Create
+                </Button>
+              </LinkContainer>
+            }
             </Card.Body>
           </Card>
 
-          
-
         </Container>
       </Container>
-
-      <Form onSubmit={logOut}>
-        <button>Logout</button>
-      </Form>
       
     </Container>
      

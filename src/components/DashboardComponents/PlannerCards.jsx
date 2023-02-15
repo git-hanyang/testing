@@ -4,34 +4,25 @@ import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 import { Card, Button, Toast, ToastContainer } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { PlannerContext } from "../../PlannerContext";
 
 
-function PlannerCards({ data }) {
-  //const [plannerIDsData, setPlannerIDsData] = useContext();
-  const [plannerData, setPlannerData] = useState(data);
+function PlannerCards(data) {
+  const [plannerData,setNewPlannerData]=useContext(PlannerContext)
 
-  function renderDates() {
-    const start = new Date(plannerData.travelPeriod.start);
-    const end = new Date(plannerData.travelPeriod.end);
-
-    // const dates = start date
-  }
+  
   function handleDelete(e) {
-    const uuid = plannerData.uuid;
+    //console.log(data.data._id)
     axios({
-      url: `http://localhost:3003/api/planner/${uuid}`,
+      url: `http://localhost:3003/api/planner/${data.data._id}`,
       method: "delete",
     }).then(() => {
       axios({
         url: "http://localhost:3003/api/planner",
         method: "get",
       }).then((res) => {
-        console.log(res)
-        // setPlannerIDsData(
-        //   res.data.map((planner) => {
-        //     return { name: planner.name, uuid: planner.uuid };
-        //   })
-        // );
+        console.log(res.data)
+        setNewPlannerData(res.data)
       });
     });
   }
@@ -40,15 +31,16 @@ function PlannerCards({ data }) {
     <>
       <Card className="flex-grow-0 flex-shrink-0 w-25 text-start mb-3">
         <Card.Body>
-          <Card.Title>{plannerData.name}</Card.Title>
-          {/* <Card.Text>
+        {/* {console.log(typeof data.data.travelPeriod.start.toString())} */}
+          <Card.Title>{data.data.name}</Card.Title>
+          
             Travel Period :
-            {plannerData.travelPeriod.start +
-              " - " +
-              plannerData.travelPeriod.end}
+            {data.data.travelPeriod.start + " - " +data.data.travelPeriod.end}
+
             <br />
-            Planner Destination : {plannerData.destination}
-          </Card.Text> */}
+            Destination : {data.data.destination}
+          
+          
         </Card.Body>
         <Card.Footer className="text-end">
           {/* <LinkContainer to={`/planner/${plannerData.uuid}`}>
@@ -59,7 +51,7 @@ function PlannerCards({ data }) {
           <Button
             variant="danger"
             onClick={handleDelete}
-            data-uuid={plannerData.uuid}
+            data-uuid={data.uuid}
           >
             <FontAwesomeIcon icon={solid("x")} />
           </Button>

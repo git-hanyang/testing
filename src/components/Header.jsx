@@ -1,19 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import Cookies from 'js-cookie'
-import Login from "../pages/Login";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { LoginStatus } from "../PlannerContext";
 
 export default function Header() {
   const [expanded, setExpanded] = useState(false);
-  const [isLoggedIn,setLoggedIn]=useState(false)
+  const [isLoggedIn,setLoggedIn]= useContext(LoginStatus);
 
+  const navigate=useNavigate()
   useEffect(()=>{
-    if(Cookies.get('access_token')){
-      setLoggedIn(true)
-    }
+   getUser()
   })
 
+  function getUser(){
+    if(Cookies.get('jwt')){
+      // this is to get cookies with jwt as the name
+      //https://github.com/js-cookie/js-cookie
+      setLoggedIn(true)
+    }else{
+      setLoggedIn(false)
+    }
+  }
+
+  function logOut(){
+    axios({
+      url: `http://localhost:3003/user/logout`,
+      method: "delete",
+    })
+    .then(()=>{
+      Cookies.remove("jwt")
+      setLoggedIn(false)
+    })
+    .then(()=>{
+      navigate('/')
+    })
+  }
   return (
     <Navbar bg="dark" variant="dark" expand="lg" expanded={expanded}>
       <Container>
@@ -25,6 +49,8 @@ export default function Header() {
         <Navbar.Toggle
           onClick={() => setExpanded(expanded ? false : "expanded")}
         />
+
+        {isLoggedIn?
         <Navbar.Collapse>
           <Nav className="ms-auto">
             <LinkContainer to="/" onClick={() => setExpanded(false)}>
@@ -39,30 +65,18 @@ export default function Header() {
               <Nav.Link>Destinations</Nav.Link>
             </LinkContainer>
 
-            <LinkContainer to="/planner" onClick={() => setExpanded(false)}>
-              <Nav.Link>Planner</Nav.Link>
-            </LinkContainer>
-
-
-
-            <LinkContainer to="/signup" onClick={() => setExpanded(false)}>
-              <Nav.Link>SignUp</Nav.Link>
-            </LinkContainer>
-
             {isLoggedIn?
-              <LinkContainer to="/signup" onClick={() => setExpanded(false)}>
+              <LinkContainer to="/" onClick={logOut}>
               <Nav.Link>SignOut</Nav.Link>
             </LinkContainer>
             : <LinkContainer to="/login" onClick={() => setExpanded(false)}>
               <Nav.Link>Login</Nav.Link>
             </LinkContainer>}
-
-            <LinkContainer to="/signup" onClick={() => setExpanded(false)}>
-              <Nav.Link>Logout</Nav.Link>
-            </LinkContainer>
-
           </Nav>
         </Navbar.Collapse>
+        :
+        null
+        }
       </Container>
     </Navbar>
   );

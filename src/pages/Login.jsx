@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext } from "react";
-import { Link, useNavigate, Redirect } from "react-router-dom";
+import { useState, useEffect, useContext, useRef } from "react";
+import { Link, useNavigate} from "react-router-dom";
 import {
   Container,
   Card,
@@ -12,38 +12,24 @@ import {
 //import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import axios from "axios";
-import $ from "jquery";
 
 
 
 const Login = () => {
-  const [currentUser, setCurrentUser] = useState();
- 
-  const [plannerIDsData, setPlannerIDsData] = useState();
+  
   const navigate = useNavigate();
-
-  const [userData, setUserData] = useState({
-    username: "",
-    password: "",
-  });
- 
-
-  function handleChange(e) {
-    setUserData((prevState) => {
-      return { ...prevState, [e.target.id]: e.target.value };
-    });
-  }
-
+  const usernameRef= useRef()
+  const passwordRef=useRef()
 
   function handleLogin(e) {
     e.preventDefault();
 
     const user={
-        username:userData.username,
-        password:userData.password,
+        username:usernameRef.current.value,
+        password:passwordRef.current.value,
     }
-
-    //console.log(userData)
+   
+    console.log(user)
     
     axios({  
       url:"http://localhost:3003/user/verify",
@@ -51,38 +37,9 @@ const Login = () => {
       data:user,
       withCredentials:true,
     })
-      .then(
-        (res) => {
-        console.log(res.data)
-        //setCurrentUser(res.data);
-      })
       .then(()=>{
         navigate('/dashboard')
       })
-    //   .then(() => {
-    //     axios({
-    //       url: "/api/planner",
-    //       method: "get",
-    //     }).then((res) => {
-    //       console.log(res);
-    //       setPlannerIDsData(
-    //         res.data.map((planner) => {
-    //           return {
-    //             name: planner.name,
-    //             uuid: planner.uuid,
-    //             destination: planner.destination,
-    //           };
-    //         })
-    //       );
-    //     });
-    //   })
-    //   .then(() => {
-    //     console.log(plannerIDsData);
-    //     toggleShowSuccess();
-    //     setTimeout(() => {
-    //       navigate("/dashboard");
-    //     }, 3000);
-    //  })
       .catch((err) => {
         //const status = err.response.status;
         console.log(err.response)
@@ -108,9 +65,7 @@ const Login = () => {
                 <FloatingLabel controlId="username" label="Username">
                 <Form.Control
                     type="text"
-                    placeholder="Username"
-                    onChange={handleChange}
-                    value={userData.username}
+                    ref={usernameRef}
                     autoComplete="username"
                     required
                 />
@@ -118,9 +73,7 @@ const Login = () => {
                 <FloatingLabel controlId="password" label="Password">
                 <Form.Control
                     type="password"
-                    placeholder="Password"
-                    onChange={handleChange}
-                    value={userData.password}
+                    ref={passwordRef}
                     autoComplete="current-password"
                     required
                 />
@@ -134,7 +87,7 @@ const Login = () => {
                 </Button>
             </Form>
             <p>
-                Don't have an account? <Link to="/register">Sign Up</Link> instead.
+                Don't have an account? <Link to="/signup">Sign Up</Link> instead.
             </p>
             </Card.Body>
         </Card>
