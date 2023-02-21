@@ -92,7 +92,8 @@ app.use(
     cookie:{maxAge: oneDay},
   })
 );
-
+//for session id
+//https://www.youtube.com/watch?v=J1qXK66k1y4
 
 
 const userController = require("./controllers/users.js");

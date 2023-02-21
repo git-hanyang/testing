@@ -1,27 +1,31 @@
 const express = require("express");
 const router = express.Router();
 const Planner = require("../models/plannerSchema");
+const User = require("../models/userSchema.js");
 const jwt=require("jsonwebtoken")
 require("dotenv").config()
 
 function authenticateToken (req,res,next){
-  console.log(req.cookies)
+  // console.log(req.headers)
+  // console.log(req.session)
   const authHeader=req.headers['authorization']
   const token = authHeader && authHeader.split(' ')[1]
   if(token==null) return res.sendStatus(401)
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err,user)=>{
     if(err)return res.sendStatus(403)
     req.user= user
-    next()
+      next()
   })
 }
 
 //https://www.youtube.com/watch?v=mbsmsi7l3r4&t=1444s
 
 router.get("/", authenticateToken, (req, res) => {
-  Planner.find({}, (err, myPlanner) => {
+  //User.findOne({username:req.user})
+  console.log(req.cookies.bridge)
+  console.log(req.user)
+  Planner.find({id:req.cookies.bridge}, (err, myPlanner) => {
     //console.log(req.session.currentUser.username)
-    
     if (err) {
       res.status(400).send({ err: err.message });
     } else {
@@ -50,9 +54,16 @@ router.get("/:id", (req, res) => {
 
 //***************************To Create/Insert The Attraction ********************//
 
-router.post("/", (req, res) => {
-  Planner.create(req.body, (err, createdPlanner) => {
+router.post("/", authenticateToken, (req, res) => {
+  const plannerData={
+    //username:req.user,
+    data:[],
+    ...req.body
+  }
+  //console.log(req.session)
+  Planner.create(plannerData, (err, createdPlanner) => {
     if (err) {
+      console.log(err)
       res.status(400).send({ err: err.message });
     } else {
       res.send(createdPlanner);
