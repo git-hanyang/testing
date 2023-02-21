@@ -12,6 +12,8 @@ import {
 //import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import axios from "axios";
+import { CurrentUserDetail } from "../PlannerContext";
+import { Cookies } from "react-cookie";
 
 
 
@@ -28,8 +30,6 @@ const Login = () => {
         username:usernameRef.current.value,
         password:passwordRef.current.value,
     }
-   
-    console.log(user)
     
     axios({  
       url:"http://localhost:3003/user/verify",
@@ -41,13 +41,10 @@ const Login = () => {
         navigate('/dashboard')
       })
       .catch((err) => {
-        //const status = err.response.status;
-        console.log(err.response)
-        console.log(err.request)
         console.log(err.message)
-        //console.log(status);
       });
   }
+
 
   return (
     <>

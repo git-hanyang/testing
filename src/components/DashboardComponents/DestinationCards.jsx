@@ -29,7 +29,7 @@ function DestinationCards({data}) {
 
       
         <div className="img-wrap">
-          <img src={photo} alt="{photo}" />
+          <img src={photo} alt={photo} />
         </div>
 
         <Card.Title>{cityName}</Card.Title>

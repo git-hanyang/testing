@@ -32,6 +32,7 @@ export default function Header() {
     })
     .then(()=>{
       Cookies.remove("jwt")
+      Cookies.remove("bridge")
       setLoggedIn(false)
     })
     .then(()=>{

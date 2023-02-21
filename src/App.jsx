@@ -13,48 +13,39 @@ import { PlannerContext } from "./PlannerContext";
 import { useState, createContext } from "react";
 import { LoginStatus } from "./PlannerContext";
 import Destination from "./pages/Destination";
-//export const PlannerContext= createContext()
 
-// function Random() {
-//   return (
-//     <div>
-//       <h2>Random</h2>
-//       <p>
-//         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-//         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-//         veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-//         commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-//         velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-//         occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-//         mollit anim id est laborum.
-//       </p>
-//     </div>
-//   );
-// }
+//import DestinationDetails from "./pages/DestinationDetails"
 
-function App() {
+
+
+
+function App(){
 
   const [plannerData,setPlannerData]=useState()
   const [isLoggedIn,setLoggedIn]=useState(false);
+
 
   return (
     <>
     <div className="App">
     <LoginStatus.Provider value={[isLoggedIn,setLoggedIn]}>
+
       <Header />
       <PlannerContext.Provider value={[plannerData,setPlannerData]}>
       
       <Routes>
-          <Route path="/signup" element={<Register />} />
           <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<Register />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/destinations" element={<Destination />} />
+          {/* <Route path="/destination/:slug" element={<DestinationDetails/>} /> */}
           <Route path="/planner/create" element={<CreatePlanner/>} />
-          <Route path="/login" element={<Login />} />
       </Routes>
       
       </PlannerContext.Provider> 
-      </LoginStatus.Provider>
+
+    </LoginStatus.Provider>
       <Footer />
     </div>
     

@@ -29,6 +29,7 @@ export default function CreatePlanner() {
   const planDestination=useRef('')
   
   const addPlannerData={
+    id: Cookies.get('bridge'),
     name: plannerName.current.value,
     travelPeriod: {
       start: plannerDate.travelPeriod.start,
@@ -50,14 +51,9 @@ export default function CreatePlanner() {
   }
 
   useEffect(() => {
-    
     fetchDestinationsData();
-    
   },[]);
 
-  useEffect(()=>{
-    console.log(destinationsData)
-  })
 
 //   function handleChange(e) {
 //     setNewPlannerData((prevState) => {
@@ -167,4 +163,6 @@ export default function CreatePlanner() {
     </Container>
   );
 }
+
+//https://blog.logrocket.com/solve-react-useeffect-hook-infinite-loop-patterns/
 

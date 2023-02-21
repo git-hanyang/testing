@@ -24,29 +24,6 @@ export default function Destination() {
     setTest(test1)
   }
   
-  const newData = () => {
-    
-    //   const data = cityData[city].data;
-    //   const included = cityData[city].included;
-    //   const cityName = data.attributes.name;
-    //   const photoId = included[0].relationships.featured_photo.data.id;
-        
-    //   const photo = included.find(
-    //     (item) => item.id !== photoId && item.type === "photo"
-    //   ).attributes.image.medium;
-
-    //   const cityObj = {
-    //     name: cityName,
-    //     budget: data.attributes.budget[`${cityName}`].value,
-    //     rating: data.attributes.average_rating,
-    //     slug: data.attributes.slug,
-    //     photo: photo,
-    //   };
-    //   content.push(cityObj);
-    // }
-    // setDestinationsData(content);
-    
- };
   function display(){
     console.log(test1)
     console.log(test)
@@ -61,11 +38,13 @@ export default function Destination() {
 
   return (
     <>
-    <Container fluid={true} className="flex-fill overflow-auto">
+    <Container fluid={true} className="flex-fill overflow-auto" >
+    <br/>
       <h2>Destinations</h2>
+    <br/>
       <Container
         fluid={true}
-        className="d-flex flex-row justify-content-start align-items-center flex-wrap gap-5 "
+        className="d-flex flex-row justify-content-center align-items-center flex-wrap gap-5 "
       >
       {destinationsData.map((city,idx) => {
                   return (
@@ -76,7 +55,7 @@ export default function Destination() {
                     />
                   )
                 })}
-        <button onClick={display}></button>
+        {/* <button onClick={display}></button> */}
             
         
       </Container>

@@ -26,6 +26,7 @@ export default function Dashboard() {
   const [plannerData,setPlannerData]=useContext(PlannerContext)
   const [isLoggedIn,setLoggedIn]= useContext(LoginStatus)
 
+
   const [plannerLoaded,setPlannerLoaded]=useState(false)
   const [destinationsData, setDestinationsData] = useState([]);
   const [destinationsLoaded, setDestinationsLoaded]=useState(false)
@@ -76,10 +77,10 @@ export default function Dashboard() {
   <>
     <Container
       fluid={true}
-      className="flex-fill d-flex flex-column justify-content-start align-items-start gap-2 p-5 position-relative"
+      className="flex-fill d-flex flex-column justify-content-start align-items-start gap-2 p-2 position-relative"
     >
       <h2>Dashboard</h2>
-
+  
         <Container
           fluid={true}
           className="d-flex flex-column justify-content-center align-items-start p-0 gap-3 my-2"
@@ -128,9 +129,8 @@ export default function Dashboard() {
                   />
                 );
               })
-            ) : (
-            <h5>Loading</h5>
-          )}
+            ) : 
+            null}
 
           <Card className="flex-shrink-0 25 text-start p-4">
             <Card.Body>
