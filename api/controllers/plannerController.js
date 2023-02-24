@@ -34,7 +34,7 @@ router.get("/", authenticateToken, (req, res) => {
   });
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id",authenticateToken, (req, res) => {
   Planner.findOne({_id : req.params.id}, (err, myPlanner) => {
     if (err) {
       res.status(400).send({ err: err.message });
@@ -44,10 +44,6 @@ router.get("/:id", (req, res) => {
   });
 });
 
-
-
-
-//***************************To Create/Insert The Attraction ********************//
 
 
 
@@ -90,7 +86,8 @@ router.delete("/:id", (req, res) => {
 
 //***************************To Update The Attraction *****************************//
 
-router.put("/:id", (req, res) => {
+router.put("/:id", authenticateToken,(req, res) => {
+  console.log(req.params.id)
   Planner.findByIdAndUpdate(
     req.params.id,
     req.body,

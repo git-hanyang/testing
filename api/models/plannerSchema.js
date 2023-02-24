@@ -16,7 +16,7 @@ const plannerSchema = new Schema({
     end: {type:String,required:false}
   },
   destination: { type: String, required: false },
-  data: [{type: Object}],
+  plannedActivity: {type: String},
 });
 
 
