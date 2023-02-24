@@ -4,50 +4,47 @@ import axios from "axios";
 import React, { useState, useEffect, useContext } from "react";
 import { Card, Button, Toast, ToastContainer } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { PlannerContext } from "../../PlannerContext";
+import { countStatus } from "../../PlannerContext";
+
 
 
 function PlannerCards(data) {
-  const [plannerData,setNewPlannerData]=useContext(PlannerContext)
-
   
+  const [count,setCount]=useContext(countStatus)
+
   function handleDelete(e) {
     //console.log(data.data._id)
     axios({
       url: `http://localhost:3003/api/planner/${data.data._id}`,
       method: "delete",
-    }).then(() => {
-      axios({
-        url: "http://localhost:3003/api/planner",
-        method: "get",
-      }).then((res) => {
-        console.log(res.data)
-        setNewPlannerData(res.data)
+    }).then((res) => {
+        console.log(count)
+        setCount(count+1)
+        //https://stackoverflow.com/questions/25777826/onclick-works-but-ondoubleclick-is-ignored-on-react-component
       });
-    });
-  }
+    };
 
   return (
     <>
-      <Card className="flex-grow-0 flex-shrink-0 w-25 text-start mb-3">
+      <Card className="flex-grow-0 flex-shrink-0 w-20 text-start mb-0">
         <Card.Body>
         {/* {console.log(typeof data.data.travelPeriod.start.toString())} */}
-          <Card.Title>{data.data.name}</Card.Title>
+          <Card.Title className="text-center"><h5>{data.data.name}</h5></Card.Title>
           
-            Travel Period :
-            {data.data.travelPeriod.start + " - " +data.data.travelPeriod.end}
+            <h6>Travel Period</h6> 
+            <p>{data.data.travelPeriod.start} - {data.data.travelPeriod.end}</p> 
 
-            <br />
-            Destination : {data.data.destination}
+            <h6>Destination</h6> 
+            <p>{data.data.destination}</p>
           
           
         </Card.Body>
         <Card.Footer className="text-end">
-          {/* <LinkContainer to={`/planner/${plannerData.uuid}`}>
+          <LinkContainer to={`/planner/${data.data._id}`}>
             <Button variant="primary" className="me-1">
-              <FontAwesomeIcon icon={solid("eye")} />
+              <FontAwesomeIcon icon={solid("pen")} />
             </Button>
-          </LinkContainer> */}
+          </LinkContainer>
           <Button
             variant="danger"
             onClick={handleDelete}

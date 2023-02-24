@@ -1,7 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useNavigate, Redirect } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios"; //no need to use .json
 import { LinkContainer } from "react-router-bootstrap";
@@ -9,15 +8,13 @@ import {
   Container,
   Card,
   Button,
-  Form,
-  Toast,
-  ToastContainer,
 } from "react-bootstrap";
+
 import DestinationCards from "../components/DashboardComponents/DestinationCards";
 
 import PlannerCards from "../components/DashboardComponents/PlannerCards";
 import cityData from "../data/destinations";
-import { PlannerContext } from "../PlannerContext";
+import { PlannerContext,countStatus } from "../PlannerContext";
 import { LoginStatus } from "../PlannerContext";
 
 
@@ -25,7 +22,7 @@ import { LoginStatus } from "../PlannerContext";
 export default function Dashboard() {
   const [plannerData,setPlannerData]=useContext(PlannerContext)
   const [isLoggedIn,setLoggedIn]= useContext(LoginStatus)
-
+  const [count,setCount]=useContext(countStatus)
 
   const [plannerLoaded,setPlannerLoaded]=useState(false)
   const [destinationsData, setDestinationsData] = useState([]);
@@ -71,19 +68,22 @@ export default function Dashboard() {
 
   useEffect(()=>{
     fetchPlannerData()
-  },[plannerData])
+  },[count])
+
+
   
   return (
   <>
     <Container
       fluid={true}
-      className="flex-fill d-flex flex-column justify-content-start align-items-start gap-2 p-2 position-relative"
+      className="flex-fill "
     >
+    <br />
       <h2>Dashboard</h2>
   
         <Container
           fluid={true}
-          className="d-flex flex-column justify-content-center align-items-start p-0 gap-3 my-2"
+          className="d-flex flex-column justify-content-center align-items-start p-0 gap-1"
         >
           <h5>Destinations</h5>
           

@@ -15,31 +15,19 @@ import Cookies from "js-cookie";
 
 export default function CreatePlanner() {
 
-    const [plannerDate,setPlannerDate]=useState({
+    const [inputPlannerData,setInputPlannerData]=useState({
         travelPeriod: {
                         start: "",
                         end: "",
-                    }
-                })
+                    },
+        destination: '',
+      })
 
   const [destinationsData, setDestinationsData] = useState([]);
   const navigate = useNavigate();
   
   const plannerName=useRef('')
-  const planDestination=useRef('')
-  
-  const addPlannerData={
-    id: Cookies.get('bridge'),
-    name: plannerName.current.value,
-    travelPeriod: {
-      start: plannerDate.travelPeriod.start,
-      end: plannerDate.travelPeriod.end,
-    },
-    destination: planDestination.current.value,
-  };
-//   data variable names have to match with database variables
-
-  
+  const plannedActivity=useRef('')
 
   function fetchDestinationsData() {
     const dataArray = [];
@@ -54,15 +42,8 @@ export default function CreatePlanner() {
     fetchDestinationsData();
   },[]);
 
-
-//   function handleChange(e) {
-//     setNewPlannerData((prevState) => {
-//       return { ...prevState, [e.target.id]: e.target.value };
-//     });
-//   }
-
   function handleDates(e) {
-    setPlannerDate((prevState) => {
+    setInputPlannerData((prevState) => {
       return {
         ...prevState,
         travelPeriod: {
@@ -73,8 +54,29 @@ export default function CreatePlanner() {
     });
   }
 
+  function handleChange(e){
+    setInputPlannerData((prevState)=>{
+      return{
+        ...prevState,  
+          [e.target.id]:e.target.value
+      }
+    }) 
+  }
 
   function handleSubmit(e) {
+    
+  const addPlannerData={
+    id: Cookies.get('bridge'),
+    name: plannerName.current.value,
+    travelPeriod: {
+      start: inputPlannerData.travelPeriod.start,
+      end: inputPlannerData.travelPeriod.end,
+    },
+    destination: inputPlannerData.destination,
+    plannedActivity: plannedActivity.current.value
+  };
+//   data variable names have to match with database variables
+
     e.preventDefault();
     const token = Cookies.get('jwt')
     axios({
@@ -84,23 +86,10 @@ export default function CreatePlanner() {
       headers:{
         Authorization:`Bearer ${token}`
       }
+    }).then(()=>{
+      navigate('/dashboard')
     })
-      .then(() => {
-        navigate('/dashboard')
-      })      
-//       // .then(() => {
-//       //   navigate(`/destination/${newPlannerData.destination}`);
-//       // })
-//       .catch((err) => {
-//         const statusCode = err.response.status;
-//         if (statusCode === 401) {
-//           navigate("/login");
-//         } else if (statusCode === 404) {
-//           console.log(err);
-//         } else {
-//           console.log(err.response.data.error);
-//         }
-//       });
+         
    }
 
   return (
@@ -124,22 +113,21 @@ export default function CreatePlanner() {
           <Form.Control
             type="date"
             id="start"
-            value={plannerDate.travelPeriod.start}
+            value={inputPlannerData.travelPeriod.start}
             onChange={handleDates}
             placeholder="Select Date"
           />
           <Form.Control
             type="date"
             id="end"
-            value={plannerDate.travelPeriod.end}
+            value={inputPlannerData.travelPeriod.end}
             onChange={handleDates}
             placeholder="Select Date"
           />
         </InputGroup>
 
         <FormSelect 
-        //onChange={handleChange} 
-        ref={planDestination} 
+        onChange={handleChange} 
         id="destination">
           <option>Choose Destination</option>
           {destinationsData.map((city,idx) => {
@@ -152,7 +140,9 @@ export default function CreatePlanner() {
             );
           })}
         </FormSelect>
-
+          <textarea cols="30" rows="10" placeholder="Plan your schedule & activities here"  
+          ref={plannedActivity} 
+          />
         <Button
           className="flex-grow-0 flex-shrink-0 w-50 mx-auto"
           type="submit"
