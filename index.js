@@ -38,7 +38,7 @@ const cors = require("cors");
 
 app.use(cookieParser())
 
-const whitelist = ["http://localhost:3000","https://travelapp2u.onrender.com"];
+const whitelist = ["https://travelapp2u.onrender.com","https://travelapp2u.netlify.app","http://localhost:3000"];
 
 const corsOption = {
   origin: whitelist,

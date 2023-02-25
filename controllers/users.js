@@ -18,6 +18,7 @@ router.post("/add", async (req, res) => {
       }
   })
 })
+//curl -X POST -H "Content-Type:application/json" -d '{"username":"test", "password":"wq"}' https://travelapp2u-api.onrender.com/user/add
 
 router.post("/verify",  (req, res) => {
   //console.log(req.sessionID)
