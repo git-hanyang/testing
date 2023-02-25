@@ -61,7 +61,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 
-const portnum = 3003;
+const portnum = process.env.PORT || 3003;
 app.listen(portnum,'localhost', () => {
   console.log("travel app is listening to port " + portnum);
 });
@@ -69,12 +69,17 @@ app.listen(portnum,'localhost', () => {
 ///////////////////////////////////////////////////////////////////////
 const mongoose = require("mongoose");
 
+id=process.env.id
+password=process.env.password
+const MONGODB_URI =`mongodb+srv://${id}:${password}@cluster0.zizp4z1.mongodb.net/travel-app` 
+mongoURI=process.env.MONGODB_URI
 
-const mongoURI =
-  process.env.MONGODB_URI ||
-  "mongodb+srv://"+process.env.secret+".mongodb.net/travel-app";
-
-mongoose.connect(mongoURI, { useNewUrlParser: true });
+mongoose.connect(
+  mongoURI,
+  { useNewUrlParser:true},
+  ()=>{console.log(`connection to db is established`)
+  }
+);
 
 mongoose.connection.once("open", () => {
   console.log("connected to mongodb");
