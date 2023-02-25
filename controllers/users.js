@@ -37,7 +37,8 @@ router.post("/verify",  (req, res) => {
 
           res.cookie("jwt",token,{
             httpOnly: true,
-            maxAge: 1000*60*60*24
+            maxAge: 1000*60*60*24,
+            sameSite:"none"
           })
 
           res.cookie("bridge",userFound.id,{
