@@ -100,8 +100,9 @@ const plannerController = require("./controllers/plannerController.js");
 app.use("/user", userController);
 app.use("/api/planner", plannerController);
 
-
-
+app.get('/',(req,res)=>{
+  res.redirect('/')
+})
 
 
 
