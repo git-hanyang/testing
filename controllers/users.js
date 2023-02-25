@@ -38,12 +38,15 @@ router.post("/verify",  (req, res) => {
           res.cookie("jwt",token,{
             httpOnly: false,
             maxAge: 1000*60*60*24,
-            secure:true,
+            secure:false,
             sameSite:"none"
           })
 
           res.cookie("bridge",userFound.id,{
-            maxAge: 1000*60*60*24
+            httpOnly:false,
+            maxAge: 1000*60*60*24,
+            secure:false,
+            sameSite:"none"
           })
           
           res.json({accessToken:token})

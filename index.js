@@ -20,7 +20,7 @@ app.use(
     cookie:{
       maxAge: oneDay,
       sameSite:"none",
-      secure:true
+      secure:false
     },
   })
 );
