@@ -50,7 +50,9 @@ router.post("/verify",  (req, res) => {
         //console.log(req.cookies)
         //res.send('ok')
       }
-    } 
+    } else{
+      res.send(err.message)
+    }
   })
 })
 
