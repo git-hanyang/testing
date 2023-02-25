@@ -1,19 +1,33 @@
 require("dotenv").config();
-const User = require("./models/userSchema.js");
+
 
 const express = require("express");
 const session = require("express-session");
 const app = express();
 const cookieParser=require("cookie-parser")
-const redis = require("connect-redis");
-const jwt=require("jsonwebtoken")
+//const redis = require("connect-redis");
+///////////////////////////////////////////////////////////////////////
+//**************************SignUp & SignIn *****************************//
+const oneDay=1000*60*60*24
+
+
+app.use(
+  session({
+    //store:new RedisStore({client:redisClient}),
+    secret: "someramdomstringvalue",
+    resave: false,
+    saveUninitialized: false,
+    cookie:{maxAge: oneDay},
+  })
+);
+//for session id
+//https://www.youtube.com/watch?v=J1qXK66k1y4
 
 // const { createProxyMiddleware } = require("http-proxy-middleware");
 // app.use('/api', createProxyMiddleware('**',{ target: 'http://localhost:3003', changeOrigin: true }))
 
 
 const cors = require("cors");
-
 
 // app.use(function (req, res, next) {
 //   res.header("Access-Control-Allow-Origin", "*");
@@ -34,9 +48,9 @@ const corsOption = {
 
 app.use(cors(corsOption))
 
-const redisClient = require('redis').createClient({
-  legacyMode:true
-});
+// const redisClient = require('redis').createClient({
+//   legacyMode:true
+// });
 
 // redisClient.connect().catch(console.log)
 // const RedisStore=redis(session)
@@ -47,7 +61,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 
-
 const portnum = 3003;
 app.listen(portnum,'localhost', () => {
   console.log("travel app is listening to port " + portnum);
@@ -56,7 +69,7 @@ app.listen(portnum,'localhost', () => {
 ///////////////////////////////////////////////////////////////////////
 const mongoose = require("mongoose");
 
-// const mongoURI = 'mongodb://192.168.1.103:27017/travel' || process.env.MONGODB_URI;
+
 const mongoURI =
   process.env.MONGODB_URI ||
   "mongodb+srv://"+process.env.secret+".mongodb.net/travel-app";
@@ -76,30 +89,8 @@ mongoose.connection.on("disconnected", () => {
 });
 
 
-
-
-///////////////////////////////////////////////////////////////////////
-//**************************SignUp & SignIn *****************************//
-const oneDay=1000*60*60*24
-
-
-app.use(
-  session({
-    //store:new RedisStore({client:redisClient}),
-    secret: "someramdomstringvalue",
-    resave: false,
-    saveUninitialized: false,
-    cookie:{maxAge: oneDay},
-  })
-);
-//for session id
-//https://www.youtube.com/watch?v=J1qXK66k1y4
-
-
 const userController = require("./controllers/users.js");
 const plannerController = require("./controllers/plannerController.js");
-
-
 
 app.use("/user", userController);
 app.use("/api/planner", plannerController);
