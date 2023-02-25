@@ -17,7 +17,11 @@ app.use(
     secret: "someramdomstringvalue",
     resave: false,
     saveUninitialized: false,
-    cookie:{maxAge: oneDay},
+    cookie:{
+      maxAge: oneDay,
+      sameSite:"none",
+      secure:true
+    },
   })
 );
 //for session id
