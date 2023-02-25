@@ -101,7 +101,7 @@ app.use("/user", userController);
 app.use("/api/planner", plannerController);
 
 app.get('/',(req,res)=>{
-  res.redirect('https://travelapp2u.onrender.com/login')
+  res.redirect('/')
 })
 
 
