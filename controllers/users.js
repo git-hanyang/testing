@@ -38,14 +38,14 @@ router.post("/verify",  (req, res) => {
           res.cookie("jwt",token,{
             httpOnly: false,
             maxAge: 1000*60*60*24,
-            secure:false,
+            secure:true,
             sameSite:"none"
           })
 
           res.cookie("bridge",userFound.id,{
             httpOnly:false,
             maxAge: 1000*60*60*24,
-            secure:false,
+            secure:true,
             sameSite:"none"
           })
           
@@ -64,11 +64,13 @@ router.post("/verify",  (req, res) => {
 //curl -X POST -H "Content-Type:application/json" -d '{"username":"wq", "password":"wq"}' https://travelapp2u-api.onrender.com/user/verify
 
 router.delete('/logout',(req,res)=>{
+
   req.session.destroy(
     ()=>{
       res.send('loggedOut')
     }
   )
+  //res.clearCookie('jwt)
 })
 
 module.exports = router;
